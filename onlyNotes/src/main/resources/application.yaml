@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: Only Notes
+
+  main:
+    allow-circular-references: true
+
+      #-------------------------------------------------- Database
+
+  data:
+    mongodb:
+      uri: mongodb+srv://technerd1207_db_user:2rv0T5dvz0IezEum@onlynotes.o4fa75k.mongodb.net/?retryWrites=true&w=majority&appName=OnlyNotes
+      database: onlyDB
+      auto-index-creation: true
+
+jwt:
+  secretKey: "TaK+HaV^uvCHEFsEVfypW#7g9^k*Z8$V"
