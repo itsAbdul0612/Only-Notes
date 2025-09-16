@@ -13,11 +13,15 @@ import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.data.domain.Pageable;
+
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -82,14 +86,16 @@ public class NotesController {
     // READ ALL
     @Operation(summary = "Retrieves all notes from database")
     @GetMapping("/get-all-notes")
-    public ResponseEntity<List<Notes>> getAllNotes(){
+    public ResponseEntity<?> getAllNotes(
+            @RequestParam(defaultValue = "0") int pageNumber,
+            @RequestParam(defaultValue = "5") int pageSize
+    ){
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String name = authentication.getName();
             User userByUsername = userService.getUserByUsername(name);
-
-            List<Notes> notesList = userByUsername.getNotesList();
-            return ResponseEntity.ok(notesList);
+            Page<Notes> notes = notesService.readAllNotes(userByUsername, pageNumber, pageSize);
+            return ResponseEntity.ok(notes);
         } catch (Exception e) {
             log.error("Error while getting all notes", e);
         }

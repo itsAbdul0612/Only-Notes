@@ -15,7 +15,7 @@ public class SwaggerConfig {
     @Bean
     public OpenAPI myCustomization(){
         return new OpenAPI().info(
-                new Info().title("Only Notes App API")
+                new Info().title("Only Notes API")
                         .description("by Abdul Rahman")
         ).servers(List.of(
                 new Server().url("http://localhost:8080").description("Local"),

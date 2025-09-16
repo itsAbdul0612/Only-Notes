@@ -5,12 +5,15 @@ import com.technerd.onlyNotes.entity.User;
 import com.technerd.onlyNotes.repository.NotesRepo;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class NotesService {
@@ -41,11 +44,17 @@ public class NotesService {
        return notesRepo.findById(id);
     }
 
+    //READ ALL
+    public Page<Notes> readAllNotes(User username, int pageNumber, int pageSize){
+        Pageable pageable = PageRequest.of(pageNumber,pageSize, Sort.by("date").descending());
+        return notesRepo.findAll(pageable);
+    }
+
     // UPDATE
     public void saveUpdatedNotes(Notes notes, String username){
-        Notes save = notesRepo.save(notes);
+        Notes saveInDb = notesRepo.save(notes);
         User user = userService.getUserByUsername(username);
-        user.getNotesList().add(save);
+        user.getNotesList().add(saveInDb);
     }
 
     // DELETE

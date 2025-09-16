@@ -6,7 +6,7 @@ import com.technerd.onlyNotes.entity.User;
 import com.technerd.onlyNotes.DTOs.usersDTOSetup.UserDTO;
 import com.technerd.onlyNotes.service.UserDetailServiceImpl;
 import com.technerd.onlyNotes.service.UserService;
-import com.technerd.onlyNotes.utility.JwtUtil;
+import com.technerd.onlyNotes.service.JwtService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +36,7 @@ public class PublicController {
     private UserDetailServiceImpl userDetailService;
 
     @Autowired
-    private JwtUtil jwtUtil;
+    private JwtService jwtService;
 
     // CREATE
     @PostMapping("/signup")
@@ -67,7 +67,7 @@ public class PublicController {
             UserDetails userDetails = userDetailService.loadUserByUsername(userRequestDTO.getUserName());
 
             // Generating JWT Token using userName...
-            String jwt = jwtUtil.generateToken(userDetails.getUsername());
+            String jwt = jwtService.generateToken(userDetails.getUsername());
 
             return ResponseEntity.ok(jwt);
 

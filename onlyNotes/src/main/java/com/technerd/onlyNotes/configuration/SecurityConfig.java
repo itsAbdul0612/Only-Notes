@@ -30,7 +30,14 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity https) throws Exception{
         return https.authorizeHttpRequests(request -> request
                         .requestMatchers("/notes/**", "/user/**").authenticated()
-                        .requestMatchers("/public/**").permitAll()
+                        .requestMatchers(
+                                "/v3/api-docs",
+                                "/v3/api-docs/**",
+                                "/swagger-ui.html",
+                                "/swagger-ui/**",
+                                "/docs",
+                                "/docs/**",
+                                "/public/**").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN").anyRequest().permitAll())
 
 
