@@ -13,5 +13,21 @@ spring:
       database: onlyDB
       auto-index-creation: true
 
+      #-------------------------------------------------- Redis
+
+  redis:
+    host: {localhost or cloud depends on what you use}
+    port: {6379 for localhost}
+    password: {iF you have any from cloud, default for local is nothing,
+                just comment it out iF you are using redis from local}
+
+      #-------------------------------------------------- JWT Secret Key
+
 jwt:
   secretKey: {secret key of jwt}
+
+  #-------------------------------------------------- Swagger
+
+springdoc:
+  swagger-ui:
+    path: /docs

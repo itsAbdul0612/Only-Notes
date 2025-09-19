@@ -35,3 +35,6 @@ build/
 ### Application configs (ignore real, keep example) ###
 application.yml
 application-real.yml
+
+
+banner.txt

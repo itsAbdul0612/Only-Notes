@@ -3,6 +3,7 @@ package com.technerd.onlyNotes.service;
 import com.technerd.onlyNotes.entity.Notes;
 import com.technerd.onlyNotes.entity.User;
 import com.technerd.onlyNotes.repository.NotesRepo;
+import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -15,6 +16,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 public class NotesService {
 
@@ -23,6 +25,10 @@ public class NotesService {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private RedisService redisService;
+
 
     // CREATE
     public void createNote(Notes note, String username){
@@ -76,9 +82,16 @@ public class NotesService {
     // Favourite Note
     public List<Notes> findFavouriteNotes(String username){
         User userByUsername = userService.getUserByUsername(username);
-        return userByUsername.getNotesList().stream()
-                .filter(Notes::isFavourite)
-                .toList();
+        Optional<List<Notes>> favouriteNotesFromRedis = redisService.getFavouriteNotesFromRedis(username);
+            if (favouriteNotesFromRedis.isPresent()) {
+                return favouriteNotesFromRedis.get();
+            } else {
+                List<Notes> list = userByUsername.getNotesList().stream()
+                    .filter(Notes::isFavourite)
+                    .toList();
+                redisService.set(username, list);
+                return list;
+            }
     }
 
 }

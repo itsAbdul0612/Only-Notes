@@ -6,6 +6,7 @@ import com.technerd.onlyNotes.DTOs.notesDTOSetup.NotesRequestDTO;
 import com.technerd.onlyNotes.entity.Notes;
 import com.technerd.onlyNotes.entity.User;
 import com.technerd.onlyNotes.service.NotesService;
+import com.technerd.onlyNotes.service.RedisService;
 import com.technerd.onlyNotes.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -14,18 +15,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.data.domain.Pageable;
-
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+
 
 @Slf4j
 @RestController
@@ -41,6 +40,9 @@ public class NotesController {
 
     @Autowired
     private NotesMapper mapper;
+
+    @Autowired
+    private RedisService redisService;
 
     // CREATE
     @PostMapping("/create-note")
@@ -86,15 +88,15 @@ public class NotesController {
     // READ ALL
     @Operation(summary = "Retrieves all notes from database")
     @GetMapping("/get-all-notes")
-    public ResponseEntity<?> getAllNotes(
+    public ResponseEntity<Page<Notes>> getAllNotes(
             @RequestParam(defaultValue = "0") int pageNumber,
             @RequestParam(defaultValue = "5") int pageSize
     ){
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String name = authentication.getName();
-            User userByUsername = userService.getUserByUsername(name);
-            Page<Notes> notes = notesService.readAllNotes(userByUsername, pageNumber, pageSize);
+
+            Page<Notes> notes = notesService.readAllNotes(name, pageNumber, pageSize);
             return ResponseEntity.ok(notes);
         } catch (Exception e) {
             log.error("Error while getting all notes", e);
@@ -187,12 +189,15 @@ public class NotesController {
 
     @GetMapping("/favourite-note")
     @Operation(summary = "read all favourite notes using this endpoint.")
-    public ResponseEntity<List<Notes>> getAllFavNotes(){
+    public ResponseEntity<?> getAllFavNotes(){
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String name = authentication.getName();
+
             List<Notes> favouriteNotes = notesService.findFavouriteNotes(name);
-            return new ResponseEntity<>(favouriteNotes, HttpStatus.OK);
+            if (favouriteNotes != null){
+                return new ResponseEntity<>(favouriteNotes, HttpStatus.OK);
+            }
         } catch (Exception e) {
             log.error("Error while finding fav: ", e);
         }

@@ -5,14 +5,16 @@ import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Data
 @Document(collection = "notes")
-public class Notes {
+public class Notes implements Serializable {
 
     @Id
     private ObjectId id;
+//    @JsonSerialize(using = ToStringSerializer.class)
 
     private String title;
     private String content;
