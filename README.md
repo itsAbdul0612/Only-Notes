@@ -102,7 +102,7 @@ Maven 3.x
 
 Steps
 # Clone repo
-git clone https://github.com/itsAbdul0612/onlyNotes.git
+git clone https://github.com/itsAbdul0612/Only-Notes.git
 cd onlyNotes
 
 # Build
