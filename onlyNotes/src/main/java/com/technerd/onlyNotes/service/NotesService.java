@@ -34,10 +34,12 @@ public class NotesService {
     public void createNote(Notes note, String username){
 
         User user = userService.getUserByUsername(username);
+
+        note.setUserId(user.getId());
         note.setTitle(note.getTitle());
         note.setContent(note.getContent());
         note.setFavourite(note.isFavourite());
-        note.setDate(LocalDateTime.now());
+        note.setCreatedAt(LocalDateTime.now());
 
         user.getNotesList().add(note);
         notesRepo.save(note);
@@ -51,9 +53,11 @@ public class NotesService {
     }
 
     //READ ALL
-    public Page<Notes> readAllNotes(User username, int pageNumber, int pageSize){
-        Pageable pageable = PageRequest.of(pageNumber,pageSize, Sort.by("date").descending());
-        return notesRepo.findAll(pageable);
+    public Page<Notes> readAllNotes(String username, int pageNumber, int pageSize){
+        User user = userService.getUserByUsername(username);
+        ObjectId userId = user.getId();
+        Pageable pageable = PageRequest.of(pageNumber,pageSize, Sort.by("createdAt").descending());
+        return notesRepo.findAllByUserId(userId, pageable);
     }
 
     // UPDATE

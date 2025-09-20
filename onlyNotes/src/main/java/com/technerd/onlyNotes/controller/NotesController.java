@@ -132,7 +132,7 @@ public class NotesController {
                     }
 
                     existingNote.setFavourite(notesRequestDTO.isFavourite());
-                    existingNote.setDate(LocalDateTime.now());
+                    existingNote.setLastUpdate(LocalDateTime.now());
 
                     notesService.saveUpdatedNotes(existingNote, name);
 

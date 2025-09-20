@@ -20,6 +20,7 @@ public class RedisService {
     // Time To Live Duration
     private static final Duration TTL = Duration.ofHours(1);
 
+
     @Autowired
     public RedisService(RedisTemplate<String, Object> redisTemplate){
         this.redisTemplate = redisTemplate;
@@ -31,6 +32,7 @@ public class RedisService {
     }
 
 
+    // Get from redis
     public Optional<List<Notes>> getFavouriteNotesFromRedis(String userId){
         try {
             Object fromRedis = redisTemplate.opsForValue().get(keyFor(userId));

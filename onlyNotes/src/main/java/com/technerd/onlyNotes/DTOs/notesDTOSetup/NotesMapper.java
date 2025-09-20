@@ -13,8 +13,9 @@ public class NotesMapper {
 
         dto.setTitle(notes.getTitle());
         dto.setContent(notes.getContent());
-        dto.setDate(notes.getDate());
+        dto.setCreatedAt(notes.getCreatedAt());
         dto.setFavourite(notes.isFavourite());
+        dto.setLastUpdate(notes.getLastUpdate());
 
         return dto;
     }
@@ -25,7 +26,8 @@ public class NotesMapper {
         notes.setTitle(notesRequestDTO.getTitle());
         notes.setContent(notesRequestDTO.getContent());
         notes.setFavourite(notes.isFavourite());
-        notes.setDate(notesRequestDTO.getDate());
+        notes.setCreatedAt(notesRequestDTO.getCreatedAt());
+        notes.setLastUpdate(notesRequestDTO.getLastUpdate());
 
         return notes;
     }
