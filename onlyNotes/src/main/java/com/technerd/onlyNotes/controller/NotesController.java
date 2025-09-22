@@ -29,7 +29,7 @@ import java.util.Optional;
 @Slf4j
 @RestController
 @RequestMapping("/notes")
-@Tag(name = "Notes API", description = "Create, Read, Update and Delete Notes")
+@Tag(name = "Notes API", description = "APIs related to notes like Create, Read, Update and Delete Notes")
 public class NotesController {
 
     @Autowired
@@ -67,14 +67,16 @@ public class NotesController {
     // READ
     @Operation(summary = "Read notes by their Id using this endpoint.")
     @GetMapping("/read-note/{noteId}")
-    public ResponseEntity<List<Notes>> readNote(@PathVariable ObjectId noteId){
+    public ResponseEntity<List<Notes>> readNote(@PathVariable String noteId){
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String name = authentication.getName();
             User userByUsername = userService.getUserByUsername(name);
 
+            ObjectId objectId = new ObjectId(noteId);
+
             List<Notes> notes = userByUsername.getNotesList().stream()
-                    .filter(x -> x.getId().equals(noteId))
+                    .filter(x -> x.getId().equals(objectId))
                     .toList();
             if (!notes.isEmpty()) {
                 return new ResponseEntity<>(notes, HttpStatus.OK);
@@ -108,19 +110,21 @@ public class NotesController {
     // UPDATE
     @PutMapping("/update-note/{noteId}")
     @Operation(summary = "Update notes using this endpoint.")
-    public ResponseEntity<NotesDTO> updateNote(@PathVariable ObjectId noteId,
+    public ResponseEntity<NotesDTO> updateNote(@PathVariable String noteId,
                @Valid @RequestBody NotesRequestDTO notesRequestDTO){
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String name = authentication.getName();
             User userByUsername = userService.getUserByUsername(name);
 
+            ObjectId objectId = new ObjectId(noteId);
+
             List<Notes> collect = userByUsername.getNotesList().stream()
                     .filter(x -> x.getId().equals(noteId))
                     .toList();
 
             if (!collect.isEmpty()){
-                Optional<Notes> note = notesService.readNotes(noteId);
+                Optional<Notes> note = notesService.readNotes(objectId);
                 if (note.isPresent()){
                     Notes existingNote = note.get();
 
@@ -151,12 +155,13 @@ public class NotesController {
     // DELETE
     @Operation(summary = "Delete notes using this endpoint.")
     @DeleteMapping("/delete-note/{id}")
-    public ResponseEntity<String> deleteNotes(@PathVariable ObjectId id){
+    public ResponseEntity<String> deleteNotes(@PathVariable String id){
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String name = authentication.getName();
+            ObjectId objectId = new ObjectId(id);
 
-            notesService.deleteNotes(id, name);
+            notesService.deleteNotes(objectId, name);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
             log.error("Error while deleting note: ", e);
@@ -169,12 +174,13 @@ public class NotesController {
 
     @PatchMapping("/toggle-fav/{id}")
     @Operation(summary = "Add or remove a note to or from favourites.")
-    public ResponseEntity<Notes> toggleFavourite(@PathVariable ObjectId id){
+    public ResponseEntity<Notes> toggleFavourite(@PathVariable String id){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String name = authentication.getName();
+        ObjectId objectId = new ObjectId(id);
 
         try {
-            Optional<Notes> foundNote = notesService.readNotes(id);
+            Optional<Notes> foundNote = notesService.readNotes(objectId);
             if (foundNote.isPresent() ){
                 Notes note = foundNote.get();
                note.setFavourite(!note.isFavourite());

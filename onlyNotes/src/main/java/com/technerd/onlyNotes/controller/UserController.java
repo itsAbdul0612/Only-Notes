@@ -25,7 +25,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/user")
-@Tag(name = "User API", description = "Read, Update and Delete Users")
+@Tag(name = "User API", description = "APIs related to user like Read, Update and Delete Users")
 public class UserController {
 
     @Autowired
