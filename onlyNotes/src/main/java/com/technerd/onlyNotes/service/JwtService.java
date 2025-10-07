@@ -2,9 +2,11 @@ package com.technerd.onlyNotes.service;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
@@ -46,7 +48,19 @@ public class JwtService {
                 .header().empty().add("typ","JWT")
                 .and()
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 15))
+                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 3)) // 3 mins
+                .signWith(getSigningKey())
+                .compact();
+    }
+
+    private String createRefreshToken(Map<String,Object> claims, String subject){
+        return Jwts.builder()
+                .claims(claims)
+                .subject(subject)
+                .header().empty().add("typ","JWT")
+                .and()
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 *7)) // 7 days
                 .signWith(getSigningKey())
                 .compact();
     }
@@ -54,6 +68,11 @@ public class JwtService {
     public String generateToken(String username){
         Map<String, Object> claims = new HashMap<>();
         return createToken(claims, username);
+    }
+
+    public String generateRefreshToken(String username){
+        Map<String, Object> claims = new HashMap<>();
+        return createRefreshToken(claims, username);
     }
 
     private boolean isTokenExpired(String token){

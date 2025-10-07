@@ -38,7 +38,8 @@ public class SecurityConfig {
                                 "/docs",
                                 "/docs/**",
                                 "/public/**").permitAll()
-                        .requestMatchers("/admin/**").hasRole("ADMIN").anyRequest().permitAll())
+                        .requestMatchers("/admin/**")
+                        .hasRole("ADMIN").anyRequest().permitAll())
 
 
                 .csrf(AbstractHttpConfigurer::disable)

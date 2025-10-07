@@ -93,7 +93,7 @@ public class NotesService {
                 List<Notes> list = userByUsername.getNotesList().stream()
                     .filter(Notes::isFavourite)
                     .toList();
-                redisService.set(username, list);
+                redisService.setFavouriteNotesInRedis(username, list);
                 return list;
             }
     }

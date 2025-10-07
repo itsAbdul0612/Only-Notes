@@ -6,14 +6,13 @@ import com.technerd.onlyNotes.DTOs.notesDTOSetup.NotesRequestDTO;
 import com.technerd.onlyNotes.entity.Notes;
 import com.technerd.onlyNotes.entity.User;
 import com.technerd.onlyNotes.service.NotesService;
-import com.technerd.onlyNotes.service.RedisService;
 import com.technerd.onlyNotes.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,21 +27,18 @@ import java.util.Optional;
 
 @Slf4j
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/notes")
 @Tag(name = "Notes API", description = "APIs related to notes like Create, Read, Update and Delete Notes")
 public class NotesController {
 
-    @Autowired
-    private NotesService notesService;
 
-    @Autowired
-    private UserService userService;
+    private final NotesService notesService;
 
-    @Autowired
-    private NotesMapper mapper;
+    private final UserService userService;
 
-    @Autowired
-    private RedisService redisService;
+    private final NotesMapper mapper;
+
 
     // CREATE
     @PostMapping("/create-note")
@@ -195,7 +191,7 @@ public class NotesController {
 
     @GetMapping("/favourite-note")
     @Operation(summary = "read all favourite notes using this endpoint.")
-    public ResponseEntity<?> getAllFavNotes(){
+    public ResponseEntity<List<Notes>> getAllFavNotes(){
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String name = authentication.getName();

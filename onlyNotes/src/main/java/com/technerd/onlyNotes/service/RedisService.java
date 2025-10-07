@@ -19,6 +19,7 @@ public class RedisService {
 
     // Time To Live Duration
     private static final Duration TTL = Duration.ofHours(1);
+    private static final Duration ttl = Duration.ofDays(7); // For refresh token
 
 
     @Autowired
@@ -32,7 +33,7 @@ public class RedisService {
     }
 
 
-    // Get from redis
+    // Gets notes from redis
     public Optional<List<Notes>> getFavouriteNotesFromRedis(String userId){
         try {
             Object fromRedis = redisTemplate.opsForValue().get(keyFor(userId));
@@ -45,13 +46,46 @@ public class RedisService {
         return Optional.empty(); // Never return null.
     }
 
-    // Set in redis
-    public void set(String userId, List<Notes> notes){
+    // Sets notes in redis
+    public void setFavouriteNotesInRedis(String userId, List<Notes> notes){
         try {
             redisTemplate.opsForValue().set(keyFor(userId),notes, TTL);
         } catch (Exception e){
             log.error("Error while setting in Redis: ", e);
         }
+    }
+
+    // sets refresh token in redis
+    public void setRefreshToken(String userId, String token){
+        try {
+            redisTemplate.opsForValue().set(keyFor(userId),token, ttl);
+        } catch (Exception e){
+            log.error("Error while setting in Redis: ", e);
+        }
+    }
+
+    // gets refresh token from redis
+    public String getRefreshTokenFromRedis(String userId){
+        try {
+            Object fromRedis = redisTemplate.opsForValue().get(keyFor(userId));
+            if (fromRedis != null){
+                return fromRedis.toString();
+            }
+        } catch (Exception e){
+            log.error("Error while Getting from Redis: ",e);
+        }
+        return null;
+    }
+
+    // deletes the token
+    public boolean revokeToken(String userId){
+        try {
+            redisTemplate.delete(userId);
+            return true;
+        } catch (Exception e) {
+            log.error("Error while revoking token", e);
+        }
+        return false;
     }
 
 }
