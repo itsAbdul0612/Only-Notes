@@ -1,7 +1,7 @@
 📝 OnlyNotes
 
 A JWT-secured note-taking application built with Spring Boot and MongoDB.
-OnlyNotes lets users create, update, delete, and organize personal notes — similar to Google Keep but with authentication and role-based access control.
+OnlyNotes lets users create, update, delete, and organize personal notes — similar to Google Keep.
 
 🚀 Features
 
@@ -19,7 +19,6 @@ Swagger/OpenAPI documentation at /docs
 
 Secure Password Storage with BCrypt
 
-Role-based Access Control (USER, ADMIN)
 
 🛠️ Tech Stack
 
@@ -34,7 +33,7 @@ Docs: Springdoc OpenAPI (Swagger UI)
 Other: Lombok, SLF4J (logging)
 
 📂 Project Structure
-onlyNotes/
+onlyNotes/_
 ├── src/main/java/com/example/onlyNotes
 │    ├── config/         # Swagger, Security & JWT configs
 │    ├── controller/     # REST Controllers
@@ -52,39 +51,39 @@ onlyNotes/
 🔑 API Endpoints
 Auth
 
-POST /public/register → Register user
+POST /public/signup → Register user
 
 POST /public/login → Login & get JWT
 
 Notes
 
-POST /notes/create → Create a new note
+POST /notes/create-note → Create a new note
 
-GET /notes/all → Fetch all notes (paginated)
+GET /notes/get-all-notes → Fetch all notes (paginated)
 
-GET /notes/{id} → Fetch note by ID
+GET /notes/read-note/{noteId} → Fetch note by ID
 
-PATCH /notes/fav/{id} → Toggle favorite
+GET /notes/favourite-note -> Get all favourited notes
 
-DELETE /notes/{id} → Delete note
+UPDATE /notes/update-note/{noteId} -> Update existing note
+
+PATCH /notes/toggle-fav/{id} → Toggle favorite
+
+DELETE /notes/delete-note/{id} → Delete note
 
 User
 
 GET /user/profile → Get current user profile
 
-DELETE /user/delete → Delete user
+PUT /user/update-user -> Update user details
+
+DELETE /user/delete-user → Delete user
 
 🔒 Security
 
 JWT-based authentication (Authorization: Bearer <token>)
 
 Passwords hashed using BCrypt
-
-Role-based access control:
-
-USER: Manage personal notes
-
-ADMIN: Access admin endpoints
 
 📜 Swagger Docs
 
