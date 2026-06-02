@@ -4,7 +4,7 @@ import com.technerd.onlyNotes.DTOs.usersDTOSetup.UserMapper;
 import com.technerd.onlyNotes.DTOs.usersDTOSetup.UserRequestDTO;
 import com.technerd.onlyNotes.entity.AuthResponse;
 import com.technerd.onlyNotes.entity.User;
-import com.technerd.onlyNotes.DTOs.usersDTOSetup.UserDTO;
+import com.technerd.onlyNotes.DTOs.usersDTOSetup.UserResponseDTO;
 import com.technerd.onlyNotes.service.RedisService;
 import com.technerd.onlyNotes.service.UserDetailServiceImpl;
 import com.technerd.onlyNotes.service.UserService;
@@ -45,12 +45,12 @@ public class PublicController {
     // CREATE
     @PostMapping("/signup")
     @Operation(summary = "Creates an account for the app.")
-    public ResponseEntity<UserDTO> signUp(@RequestBody UserRequestDTO userRequestDTO){
+    public ResponseEntity<UserResponseDTO> signUp(@RequestBody UserRequestDTO userRequestDTO){
         try {
             UserMapper userMapper = new UserMapper();
             User user = userMapper.toEntity(userRequestDTO);
             userService.createUser(user);
-            UserDTO dto = userMapper.toDTO(user);
+            UserResponseDTO dto = userMapper.toDTO(user);
             return ResponseEntity.ok(dto);
         } catch (Exception e){
             log.error("Error occurred while saving new user: ", e);

@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/onlyNotes.iml" filepath="$PROJECT_DIR$/.idea/onlyNotes.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/Only-Notes.iml" filepath="$PROJECT_DIR$/.idea/Only-Notes.iml" />
+      <module fileurl="file://$PROJECT_DIR$/onlyNotes/onlyNotes.iml" filepath="$PROJECT_DIR$/onlyNotes/onlyNotes.iml" />
     </modules>
   </component>
 </project>

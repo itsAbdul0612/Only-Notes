@@ -10,7 +10,7 @@ spring:
   data:
     mongodb:
       uri: {Database connection string}
-      database: onlyDB
+      database: {Database name}
       auto-index-creation: true
 
       #-------------------------------------------------- Redis

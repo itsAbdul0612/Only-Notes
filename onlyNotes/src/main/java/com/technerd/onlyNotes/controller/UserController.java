@@ -1,6 +1,6 @@
 package com.technerd.onlyNotes.controller;
 
-import com.technerd.onlyNotes.DTOs.usersDTOSetup.UserDTO;
+import com.technerd.onlyNotes.DTOs.usersDTOSetup.UserResponseDTO;
 import com.technerd.onlyNotes.DTOs.usersDTOSetup.UserMapper;
 import com.technerd.onlyNotes.DTOs.usersDTOSetup.UserRequestDTO;
 import com.technerd.onlyNotes.entity.Notes;
@@ -68,10 +68,10 @@ public class UserController {
             UserMapper mapper = new UserMapper();
 
             User user = mapper.toEntity(userRequestDTO);
-            UserDTO userDTO = mapper.toDTO(user);
+            UserResponseDTO userResponseDTO = mapper.toDTO(user);
 
             userService.saveUser(userByUsername);
-            return new ResponseEntity<>(userDTO, HttpStatus.OK);
+            return new ResponseEntity<>(userResponseDTO, HttpStatus.OK);
         } catch (Exception e) {
             log.error("Error while updating user: ", e);
         }

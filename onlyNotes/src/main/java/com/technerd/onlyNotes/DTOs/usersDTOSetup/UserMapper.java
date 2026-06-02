@@ -8,13 +8,13 @@ public class UserMapper {
 
     // USER
 
-    public UserDTO toDTO(User user){
+    public UserResponseDTO toDTO(User user){
 
-        UserDTO userDTO = new UserDTO();
-        userDTO.setUserName(user.getUserName());
-        userDTO.setEmail(user.getEmail());
+        UserResponseDTO userResponseDTO = new UserResponseDTO();
+        userResponseDTO.setUserName(user.getUserName());
+        userResponseDTO.setEmail(user.getEmail());
 
-        return userDTO;
+        return userResponseDTO;
     }
 
     public User toEntity(UserRequestDTO userRequestDTO){

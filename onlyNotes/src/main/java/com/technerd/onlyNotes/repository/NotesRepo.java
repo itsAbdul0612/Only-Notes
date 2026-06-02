@@ -16,3 +16,5 @@ public interface NotesRepo extends
 
    Page<Notes> findAllByUserId(ObjectId userId, Pageable pageable);
 }
+
+// Controller --> Service --> Repository

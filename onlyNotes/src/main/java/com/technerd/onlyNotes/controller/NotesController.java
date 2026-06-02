@@ -1,6 +1,6 @@
 package com.technerd.onlyNotes.controller;
 
-import com.technerd.onlyNotes.DTOs.notesDTOSetup.NotesDTO;
+import com.technerd.onlyNotes.DTOs.notesDTOSetup.NotesResponseDTO;
 import com.technerd.onlyNotes.DTOs.notesDTOSetup.NotesMapper;
 import com.technerd.onlyNotes.DTOs.notesDTOSetup.NotesRequestDTO;
 import com.technerd.onlyNotes.entity.Notes;
@@ -32,27 +32,25 @@ import java.util.Optional;
 @Tag(name = "Notes API", description = "APIs related to notes like Create, Read, Update and Delete Notes")
 public class NotesController {
 
-
     private final NotesService notesService;
 
     private final UserService userService;
 
     private final NotesMapper mapper;
 
-
     // CREATE
     @PostMapping("/create-note")
     @Operation(summary = "Create notes using this endpoint.")
-    public ResponseEntity<NotesDTO> createNote(@Valid @RequestBody NotesRequestDTO notesRequestDTO){
+    public ResponseEntity<NotesResponseDTO> createNote(@Valid @RequestBody NotesRequestDTO notesRequestDTO){
        try {
            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
            String name = authentication.getName();
 
            Notes entity = mapper.toEntity(notesRequestDTO);
-           NotesDTO notesDTO = mapper.toDTO(entity);
+           NotesResponseDTO notesResponseDTO = mapper.toDTO(entity);
            notesService.createNote(entity, name);
 
-           return new ResponseEntity<>(notesDTO, HttpStatus.CREATED);
+           return new ResponseEntity<>(notesResponseDTO, HttpStatus.CREATED);
        } catch (Exception e) {
            log.error("Error occurred while saving notes: ", e);
            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -102,12 +100,11 @@ public class NotesController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-
     // UPDATE
     @PutMapping("/update-note/{noteId}")
     @Operation(summary = "Update notes using this endpoint.")
-    public ResponseEntity<NotesDTO> updateNote(@PathVariable String noteId,
-               @Valid @RequestBody NotesRequestDTO notesRequestDTO){
+    public ResponseEntity<NotesResponseDTO> updateNote(@PathVariable String noteId,
+                                                       @Valid @RequestBody NotesRequestDTO notesRequestDTO){
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String name = authentication.getName();
@@ -137,8 +134,8 @@ public class NotesController {
                     notesService.saveUpdatedNotes(existingNote, name);
 
                     Notes entity = mapper.toEntity(notesRequestDTO);
-                    NotesDTO notesDTO = mapper.toDTO(entity);
-                    return new ResponseEntity<>(notesDTO, HttpStatus.OK);
+                    NotesResponseDTO notesResponseDTO = mapper.toDTO(entity);
+                    return new ResponseEntity<>(notesResponseDTO, HttpStatus.OK);
                 }
             }
         } catch (Exception e){
@@ -206,3 +203,5 @@ public class NotesController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 }
+
+// Controller --> Service --> Repository

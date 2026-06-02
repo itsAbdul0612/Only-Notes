@@ -50,6 +50,7 @@ public class RedisService {
     public void setFavouriteNotesInRedis(String userId, List<Notes> notes){
         try {
             redisTemplate.opsForValue().set(keyFor(userId),notes, TTL);
+            log.info("Notes saved in Redis");
         } catch (Exception e){
             log.error("Error while setting in Redis: ", e);
         }
@@ -59,6 +60,7 @@ public class RedisService {
     public void setRefreshToken(String userId, String token){
         try {
             redisTemplate.opsForValue().set(keyFor(userId),token, ttl);
+            log.info("Refresh Token is loaded in Redis");
         } catch (Exception e){
             log.error("Error while setting in Redis: ", e);
         }
@@ -84,8 +86,8 @@ public class RedisService {
             return true;
         } catch (Exception e) {
             log.error("Error while revoking token", e);
+            return false;
         }
-        return false;
     }
 
 }

@@ -8,8 +8,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class NotesMapper {
 
-    public NotesDTO toDTO(Notes notes){
-        NotesDTO dto = new NotesDTO();
+    public NotesResponseDTO toDTO(Notes notes){
+        NotesResponseDTO dto = new NotesResponseDTO();
 
         dto.setTitle(notes.getTitle());
         dto.setContent(notes.getContent());
