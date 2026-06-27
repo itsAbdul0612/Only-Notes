@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 
 @Slf4j
@@ -37,6 +38,8 @@ public class NotesController {
     private final UserService userService;
 
     private final NotesMapper mapper;
+
+    private final NotesMapper notesMapper;
 
     // CREATE
     @PostMapping("/create-note")
@@ -61,7 +64,7 @@ public class NotesController {
     // READ
     @Operation(summary = "Read notes by their Id using this endpoint.")
     @GetMapping("/read-note/{noteId}")
-    public ResponseEntity<List<Notes>> readNote(@PathVariable String noteId){
+    public ResponseEntity<List<NotesResponseDTO>> readNote(@PathVariable String noteId){
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String name = authentication.getName();
@@ -69,11 +72,12 @@ public class NotesController {
 
             ObjectId objectId = new ObjectId(noteId);
 
-            List<Notes> notes = userByUsername.getNotesList().stream()
-                    .filter(x -> x.getId().equals(objectId))
+            List<NotesResponseDTO> response = userByUsername.getNotesList().stream()
+                    .filter(x -> x.getId().equals(objectId)).map(notesMapper::toDTO)
                     .toList();
-            if (!notes.isEmpty()) {
-                return new ResponseEntity<>(notes, HttpStatus.OK);
+
+            if (!response.isEmpty()) {
+                return new ResponseEntity<>(response, HttpStatus.OK);
             }
         } catch (Exception e) {
            log.error("Error while reading notes: ", e);
@@ -167,7 +171,7 @@ public class NotesController {
 
     @PatchMapping("/toggle-fav/{id}")
     @Operation(summary = "Add or remove a note to or from favourites.")
-    public ResponseEntity<Notes> toggleFavourite(@PathVariable String id){
+    public ResponseEntity<NotesResponseDTO> toggleFavourite(@PathVariable String id){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String name = authentication.getName();
         ObjectId objectId = new ObjectId(id);
@@ -178,7 +182,8 @@ public class NotesController {
                 Notes note = foundNote.get();
                note.setFavourite(!note.isFavourite());
                 notesService.saveUpdatedNotes(note, name);
-                return new ResponseEntity<>(note, HttpStatus.OK);
+                NotesResponseDTO notesResponseDTO = notesMapper.toDTO(note);
+                return new ResponseEntity<>(notesResponseDTO, HttpStatus.OK);
             }
         } catch (Exception e) {
             log.error("Error While toggling fav: ", e);
@@ -188,14 +193,17 @@ public class NotesController {
 
     @GetMapping("/favourite-note")
     @Operation(summary = "read all favourite notes using this endpoint.")
-    public ResponseEntity<List<Notes>> getAllFavNotes(){
+    public ResponseEntity<List<NotesResponseDTO>> getAllFavNotes(){
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String name = authentication.getName();
 
             List<Notes> favouriteNotes = notesService.findFavouriteNotes(name);
+
+
             if (favouriteNotes != null){
-                return new ResponseEntity<>(favouriteNotes, HttpStatus.OK);
+                List<NotesResponseDTO> responseDTOS = favouriteNotes.stream().map(notesMapper::toDTO).toList();
+                return new ResponseEntity<>(responseDTOS, HttpStatus.OK);
             }
         } catch (Exception e) {
             log.error("Error while finding fav: ", e);

@@ -2,6 +2,7 @@ package com.technerd.onlyNotes.service;
 
 import com.technerd.onlyNotes.entity.User;
 import com.technerd.onlyNotes.repository.UserRepo;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@RequiredArgsConstructor
 @Slf4j
 @Service
 public class UserService {
@@ -18,7 +20,7 @@ public class UserService {
     @Autowired
     private UserRepo userRepo;
 
-    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    private final PasswordEncoder passwordEncoder;
 
 
     // CREATE Users
@@ -47,7 +49,6 @@ public class UserService {
 
 
   // READ Users
-  // UPDATE Users
     public User getUserByUsername(String name){
       return userRepo.findUserByUserName(name);
     }

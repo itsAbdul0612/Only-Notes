@@ -10,6 +10,7 @@ import com.technerd.onlyNotes.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,27 +25,17 @@ import java.util.List;
 
 @Slf4j
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/user")
 @Tag(name = "User API", description = "APIs related to user like Read, Update and Delete Users")
 public class UserController {
 
     @Autowired
     private UserService userService;
-
     @Autowired
     private NotesService notesService;
 
-    private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-
-
-//    // READ
-//    @GetMapping
-//    public void getUser(){
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        String username = authentication.getName();
-//        userService.getUserByUsername(username);
-//    }
-
+    private final PasswordEncoder passwordEncoder;
 
     // UPDATE
     @PutMapping("/update-user")
