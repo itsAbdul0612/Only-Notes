@@ -1,106 +1,80 @@
-📝 OnlyNotes
+# 📝 OnlyNotes
 
-A JWT-secured note-taking application built with Spring Boot and MongoDB.
-OnlyNotes lets users create, update, delete, and organize personal notes — similar to Google Keep.
+A JWT-secured note-taking app built with Spring Boot and MongoDB.  
+Create, organise, and favourite your notes — think Google Keep, but with your own backend.
 
-🚀 Features
+---
 
-User Authentication & Authorization with JWT
+## Features
 
-CRUD Operations on Notes (Create, Read, Update, Delete)
+- 🔐 JWT authentication with BCrypt password hashing
+- 📒 Full CRUD on notes — create, read, update, delete
+- ⭐ Toggle favourite notes and fetch them separately
+- 📄 Pagination & sorting for large note collections
+- 🧼 DTO-based design — clean separation between entity and API layer
+- 📖 Swagger UI auto-docs at `/docs`
 
-Favorites: Toggle favorite notes & fetch all favorites
+---
 
-Pagination & Sorting for large note collections
+## Tech Stack
 
-DTO-based design (clean separation between entity & exposed API)
+| Layer | Technology |
+|---|---|
+| Backend | Spring Boot 3.5.5, Spring Security, Spring Data MongoDB |
+| Auth | JWT, BCrypt |
+| Database | MongoDB Atlas |
+| Docs | Springdoc OpenAPI (Swagger UI) |
+| Build | Maven 4.0.0 |
+| Utilities | Lombok, SLF4J |
 
-Swagger/OpenAPI documentation at /docs
+---
 
-Secure Password Storage with BCrypt
+## API Reference
 
+### Auth
+| Method | Endpoint | Description |
+|---|---|---|
+| `POST` | `/public/signup` | Register a new user |
+| `POST` | `/public/login` | Login and receive a JWT |
 
-🛠️ Tech Stack
+### Notes
+| Method | Endpoint | Description |
+|---|---|---|
+| `POST` | `/notes/create-note` | Create a new note |
+| `GET` | `/notes/get-all-notes` | Get all notes (paginated) |
+| `GET` | `/notes/read-note/{noteId}` | Get a note by ID |
+| `GET` | `/notes/favourite-note` | Get all favourited notes |
+| `PUT` | `/notes/update-note/{noteId}` | Update an existing note |
+| `PATCH` | `/notes/toggle-fav/{id}` | Toggle favourite on a note |
+| `DELETE` | `/notes/delete-note/{id}` | Delete a note |
 
-Backend: Spring Boot (3.x), Spring Security, JWT, Spring Data MongoDB
+### User
+| Method | Endpoint | Description |
+|---|---|---|
+| `GET` | `/user/profile` | Get current user's profile |
+| `PUT` | `/user/update-user` | Update user details |
+| `DELETE` | `/user/delete-user` | Delete user account |
 
-Database: MongoDB (Atlas/Local)
+---
 
-Build Tool: Maven
+## Security
 
-Docs: Springdoc OpenAPI (Swagger UI)
+All protected routes require a JWT in the `Authorization` header:
 
-Other: Lombok, SLF4J (logging)
+```
+Authorization: Bearer <token>
+```
 
-📂 Project Structure
-onlyNotes/_
-├── src/main/java/com/example/onlyNotes
-│    ├── config/         # Swagger, Security & JWT configs
-│    ├── controller/     # REST Controllers
-│    ├── dto/            # Data Transfer Objects
-│    ├── exception/      # Custom exception handling
-│    ├── model/          # Entities (User, Notes)
-│    ├── repo/           # Repositories
-│    ├── service/        # Business logic
-│    └── OnlyNotesApp.java
-├── src/main/resources/
-│    ├── application.yml
-├── pom.xml
-└── README.md
+Passwords are hashed with BCrypt and never stored in plain text.
 
-🔑 API Endpoints
-Auth
+---
 
-POST /public/signup → Register user
+## Getting Started
 
-POST /public/login → Login & get JWT
+**Prerequisites:** Java 24 · MongoDB Atlas account · Maven 4.0.0
 
-Notes
-
-POST /notes/create-note → Create a new note
-
-GET /notes/get-all-notes → Fetch all notes (paginated)
-
-GET /notes/read-note/{noteId} → Fetch note by ID
-
-GET /notes/favourite-note -> Get all favourited notes
-
-UPDATE /notes/update-note/{noteId} -> Update existing note
-
-PATCH /notes/toggle-fav/{id} → Toggle favorite
-
-DELETE /notes/delete-note/{id} → Delete note
-
-User
-
-GET /user/profile → Get current user profile
-
-PUT /user/update-user -> Update user details
-
-DELETE /user/delete-user → Delete user
-
-🔒 Security
-
-JWT-based authentication (Authorization: Bearer <token>)
-
-Passwords hashed using BCrypt
-
-📜 Swagger Docs
-
-Once app is running:
-👉 http://localhost:8080/docs
-
-🏗️ Getting Started
-Prerequisites
-
-Java 17+
-
-MongoDB (local or Atlas)
-
-Maven 3.x
-
-Steps
-# Clone repo
+```bash
+# Clone
 git clone https://github.com/itsAbdul0612/Only-Notes.git
 cd onlyNotes
 
@@ -109,6 +83,11 @@ mvn clean install
 
 # Run
 mvn spring-boot:run
+```
 
+Once running, Swagger docs are available at:  
+**http://localhost:8080/docs**
 
-⚡Built with ❤️ by Abdul Rahman
+---
+
+*Built with ❤️ by [Abdul Rahman](https://github.com/itsAbdul0612)*
